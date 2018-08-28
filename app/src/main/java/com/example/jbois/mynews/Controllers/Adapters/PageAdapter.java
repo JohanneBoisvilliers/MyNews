@@ -8,12 +8,18 @@ import com.example.jbois.mynews.Controllers.Fragments.BaseFragment;
 
 public class PageAdapter extends FragmentStatePagerAdapter {
 
-    private int[] colors;
+    private int[] colors;// array of colors to setup the background of pages in the viewpager
     //Constructor
     public PageAdapter(FragmentManager mgr, int[] colors) {
         super(mgr);
         this.colors = colors;
     }
+    //Method that set the title of each page
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return "Page "+position;
+    }
+
     //Method that get the position of the actual page in the viewpager
     @Override
     public Fragment getItem(int position) {

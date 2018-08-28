@@ -1,10 +1,12 @@
 package com.example.jbois.mynews.Controllers.Activities;
 
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.widget.TableLayout;
 
 import com.example.jbois.mynews.Controllers.Adapters.PageAdapter;
 import com.example.jbois.mynews.R;
@@ -16,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.activity_main_toolbar) Toolbar toolbar;
     @BindView(R.id.activity_main_viewpager)ViewPager pager;
+    @BindView(R.id.activity_main_tabs) TabLayout tabs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +43,12 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
     private void configureViewPager(){
-        //Get ViewPager from layout
+        //Get Views from layout
         ButterKnife.bind(this);
         //Set Adapter PageAdapter and glue it to viewpager
         pager.setAdapter(new PageAdapter(getSupportFragmentManager(), getResources().getIntArray(R.array.colorPagesViewPager)) {
         });
+        //Glue TabLayout and ViewPager together
+        tabs.setupWithViewPager(pager);
     }
 }

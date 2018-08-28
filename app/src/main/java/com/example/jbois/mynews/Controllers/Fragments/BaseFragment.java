@@ -31,10 +31,10 @@ public class BaseFragment extends Fragment {
     //Method that will create a new instance of BaseFragment, and add data to its bundle.
     public static BaseFragment newInstance(int position, int color) {
 
-        // 2.1 Create new fragment
+        //Create new fragment
         BaseFragment frag = new BaseFragment();
 
-        // 2.2 Create bundle and add it some data
+        //Create bundle and add it some data
         Bundle args = new Bundle();
         args.putInt(KEY_POSITION, position);
         args.putInt(KEY_COLOR, color);
