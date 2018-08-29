@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Get Views from layout
+        ButterKnife.bind(this);
 
         this.configureToolbar();
         this.configureViewPager();
@@ -37,16 +39,12 @@ public class MainActivity extends AppCompatActivity {
     }
     // That method configure the toolbar (serialize & sets it)
     private void configureToolbar(){
-        // Get the toolbar view inside the activity layout
-        ButterKnife.bind(this);
         // Sets the Toolbar
         setSupportActionBar(toolbar);
     }
     private void configureViewPager(){
-        //Get Views from layout
-        ButterKnife.bind(this);
         //Set Adapter PageAdapter and glue it to viewpager
-        pager.setAdapter(new PageAdapter(getSupportFragmentManager(), getResources().getIntArray(R.array.colorPagesViewPager)) {
+        pager.setAdapter(new PageAdapter(getSupportFragmentManager()) {
         });
         //Glue TabLayout and ViewPager together
         tabs.setupWithViewPager(pager);

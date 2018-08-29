@@ -1,19 +1,10 @@
-<LinearLayout
-    android:id="@+id/fragment_base_rootview"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.jbois.mynews.Controllers.Activities.MainActivity"
-    android:gravity="center">
+    android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/base_fragment_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dip"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:textColor="#fff"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_main_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-</LinearLayout>
+</RelativeLayout>
