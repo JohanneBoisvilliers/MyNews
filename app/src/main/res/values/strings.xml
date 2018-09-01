@@ -25,4 +25,12 @@
         <item>"01/09/2018"</item>
     </array>
 
+    <array name="URLsFakeNews">
+        <item>"https://openclassrooms.com"</item>
+        <item>"http://www.3dvf.com/"</item>
+        <item>"http://www.cgsociety.org"</item>
+        <item>"http://www.google.com"</item>
+        <item>"https://www.jeanlouisdavid.com"</item>
+    </array>
+
 </resources>

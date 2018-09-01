@@ -4,6 +4,7 @@ public class News {
     private String mTitle;
     private String mDate;
     private String mCategory;
+    private String mURL;
 
     public String getTitle() {
         return mTitle;
@@ -27,5 +28,13 @@ public class News {
 
     public void setCategory(String category) {
         mCategory = category;
+    }
+
+    public String getURL() {
+        return mURL;
+    }
+
+    public void setURL(String URL) {
+        mURL = URL;
     }
 }

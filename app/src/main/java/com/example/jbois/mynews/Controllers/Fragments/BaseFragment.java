@@ -1,17 +1,21 @@
 package com.example.jbois.mynews.Controllers.Fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.jbois.mynews.Controllers.Activities.WebViewArticlesActivity;
 import com.example.jbois.mynews.Controllers.Adapters.ArticleAdapter;
 import com.example.jbois.mynews.Models.News;
 import com.example.jbois.mynews.R;
+import com.example.jbois.mynews.Utils.ItemClickSupport;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,6 +62,7 @@ public class BaseFragment extends Fragment {
 
         this.configureFakeNews();
         this.configureRecyclerView();
+        this.configureOnClickRecyclerView();
 
         return result;
     }
@@ -71,12 +76,25 @@ public class BaseFragment extends Fragment {
         //Set layout manager to position the items
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
+    //Configure item click on RecyclerView
+    private void configureOnClickRecyclerView(){
+        ItemClickSupport.addTo(recyclerView, R.layout.fragment_base_item)
+                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        Intent intent = new Intent(getActivity(), WebViewArticlesActivity.class);
+                        intent.putExtra("URL",mFinalNewsList.get(position).getURL());
+                        startActivity(intent);
+                    }
+                });
+    }
 
     private void configureFakeNews(){
 
         String[] titleNewsArray = getResources().getStringArray(R.array.titleFakeNews);
         String[] categoryNewsArray = getResources().getStringArray(R.array.CategoryFakeNews);
         String[] dateNewsArray = getResources().getStringArray(R.array.dateFakeNews);
+        String[] URLsNewsArray = getResources().getStringArray(R.array.URLsFakeNews);
 
         Collections.addAll(mFinalNewsList,new News(),new News(),new News(),new News(),new News());
         int i=0;
@@ -84,6 +102,7 @@ public class BaseFragment extends Fragment {
             news.setTitle(titleNewsArray[i]);
             news.setCategory(categoryNewsArray[i]);
             news.setDate(dateNewsArray[i]);
+            news.setURL(URLsNewsArray[i]);
             i++;
         }
     }
