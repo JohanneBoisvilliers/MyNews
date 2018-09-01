@@ -1,6 +1,28 @@
 <resources>
     <string name="app_name">MyNews</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <array name="titleFakeNews">
+        <item>"L'apprentissage avec Openclassrooms"</item>
+        <item>"La 3d à la Française"</item>
+        <item>"La 3d à l'internationale"</item>
+        <item>"la recherche google ça sauve la vie"</item>
+        <item>"Jean-Louis David, pour ceux qui ont des cheveux !"</item>
+    </array>
+
+    <array name="CategoryFakeNews">
+        <item>"Apprentissage"</item>
+        <item>"3D"</item>
+        <item>"3D"</item>
+        <item>"Recherche"</item>
+        <item>"Blague"</item>
+    </array>
+
+    <array name="dateFakeNews">
+        <item>"01/09/2018"</item>
+        <item>"01/09/2018"</item>
+        <item>"01/09/2018"</item>
+        <item>"01/09/2018"</item>
+        <item>"01/09/2018"</item>
+    </array>
+
 </resources>

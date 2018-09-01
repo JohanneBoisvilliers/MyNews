@@ -7,12 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.jbois.mynews.Models.News;
 import com.example.jbois.mynews.R;
 import com.example.jbois.mynews.Views.ArticleViewHolder;
 
 import java.util.List;
 
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder> {
+
+    private List<News> mNews;
+
+    public ArticleAdapter(List<News> news) {
+        mNews = news;
+    }
 
     @NonNull
     @Override
@@ -27,11 +34,11 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder> {
 
     @Override
     public void onBindViewHolder(ArticleViewHolder viewHolder,int position) {
-        viewHolder.UpdateTitleFakeNews(position);
+        viewHolder.UpdateUINews(this.mNews.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return mNews.size();
     }
 }

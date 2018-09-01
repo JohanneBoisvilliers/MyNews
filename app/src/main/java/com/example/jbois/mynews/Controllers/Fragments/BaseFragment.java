@@ -10,7 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.jbois.mynews.Controllers.Adapters.ArticleAdapter;
+import com.example.jbois.mynews.Models.News;
 import com.example.jbois.mynews.R;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,6 +29,7 @@ public class BaseFragment extends Fragment {
     //Create keys for our Bundle
     private static final String KEY_POSITION="position";
     private ArticleAdapter mAdapter;
+    private List<News> mFinalNewsList=new ArrayList<News>();
 
     @BindView(R.id.fragment_main_recycler_view) RecyclerView recyclerView;
 
@@ -49,6 +56,7 @@ public class BaseFragment extends Fragment {
         //Get the base view from layout and serialise it
         ButterKnife.bind(this, result);
 
+        this.configureFakeNews();
         this.configureRecyclerView();
 
         return result;
@@ -57,10 +65,26 @@ public class BaseFragment extends Fragment {
     //Configure RecyclerView, Adapter, LayoutManager & glue it together
     private void configureRecyclerView(){
         //Create mAdapter passing the list of users
-        this.mAdapter = new ArticleAdapter();
+        this.mAdapter = new ArticleAdapter(mFinalNewsList);
         //Attach the mAdapter to the recyclerview to populate items
         this.recyclerView.setAdapter(this.mAdapter);
         //Set layout manager to position the items
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+
+    private void configureFakeNews(){
+
+        String[] titleNewsArray = getResources().getStringArray(R.array.titleFakeNews);
+        String[] categoryNewsArray = getResources().getStringArray(R.array.CategoryFakeNews);
+        String[] dateNewsArray = getResources().getStringArray(R.array.dateFakeNews);
+
+        Collections.addAll(mFinalNewsList,new News(),new News(),new News(),new News(),new News());
+        int i=0;
+        for (News news : mFinalNewsList){
+            news.setTitle(titleNewsArray[i]);
+            news.setCategory(categoryNewsArray[i]);
+            news.setDate(dateNewsArray[i]);
+            i++;
+        }
     }
 }
