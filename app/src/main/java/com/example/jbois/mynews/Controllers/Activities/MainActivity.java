@@ -48,8 +48,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void configureViewPager(){
         //Set Adapter PageAdapter and glue it to viewpager
-        pager.setAdapter(new PageAdapter(getSupportFragmentManager()) {
-        });
+        pager.setAdapter(new PageAdapter(getSupportFragmentManager(),getResources().getStringArray(R.array.pageTitleOfViewPager)){});
         //Glue TabLayout and ViewPager together
         tabs.setupWithViewPager(pager);
     }

@@ -1,40 +1,79 @@
 package com.example.jbois.mynews.Models;
 
+import java.util.List;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class News {
-    private String mTitle;
-    private String mDate;
-    private String mCategory;
-    private String mURL;
+    @SerializedName("status")
+    @Expose
+    private String status;
+    @SerializedName("copyright")
+    @Expose
+    private String copyright;
+    @SerializedName("section")
+    @Expose
+    private String section;
+    @SerializedName("last_updated")
+    @Expose
+    private String lastUpdated;
+    @SerializedName("num_results")
+    @Expose
+    private Integer numResults;
+    @SerializedName("results")
+    @Expose
+    private List<NewsArticles> results = null;
 
-    public String getTitle() {
-        return mTitle;
+    public String getStatus() {
+        return status;
     }
 
-    public String getDate() {
-        return mDate;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public String getCategory() {
-        return mCategory;
+    public String getCopyright() {
+        return copyright;
     }
 
-    public void setTitle(String title) {
-        mTitle = title;
+    public void setCopyright(String copyright) {
+        this.copyright = copyright;
     }
 
-    public void setDate(String date) {
-        mDate = date;
+    public String getSection() {
+        return section;
     }
 
-    public void setCategory(String category) {
-        mCategory = category;
+    public void setSection(String section) {
+        this.section = section;
     }
 
-    public String getURL() {
-        return mURL;
+    public String getLastUpdated() {
+        return lastUpdated;
     }
 
-    public void setURL(String URL) {
-        mURL = URL;
+    public void setLastUpdated(String lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
+
+    public Integer getNumResults() {
+        return numResults;
+    }
+
+    public void setNumResults(Integer numResults) {
+        this.numResults = numResults;
+    }
+
+    public List<NewsArticles> getResults() {
+        return results;
+    }
+
+    public void setResults(List<NewsArticles> results) {
+        this.results = results;
+    }
+
 }

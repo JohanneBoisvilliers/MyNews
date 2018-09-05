@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.jbois.mynews.Models.News;
+import com.example.jbois.mynews.Models.NewsArticles;
 import com.example.jbois.mynews.R;
 import com.example.jbois.mynews.Views.ArticleViewHolder;
 
@@ -15,9 +16,9 @@ import java.util.List;
 
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder> {
 
-    private List<News> mNews;
+    private List<NewsArticles> mNews;
 
-    public ArticleAdapter(List<News> news) {
+    public ArticleAdapter(List<NewsArticles> news) {
         mNews = news;
     }
 

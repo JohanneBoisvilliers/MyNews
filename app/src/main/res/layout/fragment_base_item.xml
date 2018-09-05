@@ -34,7 +34,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="#000000"/>
+                android:textColor="#000000"
+                android:text="20/09/18"/>
         </LinearLayout>
 
         <LinearLayout
