@@ -22,6 +22,9 @@ import com.example.jbois.mynews.R;
 import com.example.jbois.mynews.Utils.ItemClickSupport;
 import com.example.jbois.mynews.Utils.NewYorkTimesCall;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,6 +94,16 @@ public class BaseFragment extends Fragment implements NewYorkTimesCall.Callbacks
                     }
                 });
     }
+    //Method that sort the articles in recyclerView to show the most recent article at the bottom of the list
+    private void sortNewsList(){
+        Collections.sort(mFinalNewsList,new Comparator<NewsArticles>() {
+            @Override
+            public int compare(NewsArticles s1, NewsArticles s2) {
+                return s1.getPublishedDate().compareToIgnoreCase(s2.getPublishedDate());
+            }
+        });
+        Collections.reverse(mFinalNewsList);
+    }
 
     // --HTTP REQUEST-- //
 
@@ -112,6 +125,7 @@ public class BaseFragment extends Fragment implements NewYorkTimesCall.Callbacks
     private void updateUI(News newsList){
         List<NewsArticles> articles = newsList.getResults();
         mFinalNewsList.addAll(articles);
+        this.sortNewsList();
         mAdapter.notifyDataSetChanged();
     }
 }

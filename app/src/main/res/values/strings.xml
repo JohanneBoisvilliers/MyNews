@@ -9,5 +9,13 @@
         <item>"AUTOMOBILES"</item>
     </string-array>
 
+    <string-array name="requestList">
+        <item>"home"</item>
+        <item>""</item>
+        <item>"TECHNOLOGY"</item>
+        <item>"SCIENCE"</item>
+        <item>"AUTOMOBILES"</item>
+    </string-array>
+
 
 </resources>

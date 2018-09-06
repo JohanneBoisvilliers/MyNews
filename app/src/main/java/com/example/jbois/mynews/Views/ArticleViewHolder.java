@@ -37,7 +37,7 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder{
         ButterKnife.bind(this,itemView);
     }
     //method that update the interface of viewholder
-    public void UpdateUINews(NewsArticles news, RequestManager glide,int position){
+    public void UpdateUINews(NewsArticles news, RequestManager glide){
         // Check if there is an image thumbnail link for this article and set the image if it does
         if(news.getMultimedia().size()>=1){
             glide.load(news.getMultimedia().get(0).getUrl()).apply(RequestOptions.centerInsideTransform()).into(imageOfArticle);
@@ -59,8 +59,5 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder{
         DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd/MM/yy");
         // Set the text of the view's containing the date with the new formated date
         this.dateTextView.setText(dtfOut.print(jodatime));
-    }
-    public String getUrl() {
-        return mUrl;
     }
 }

@@ -38,7 +38,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder> {
 
     @Override
     public void onBindViewHolder(ArticleViewHolder viewHolder,int position) {
-        viewHolder.UpdateUINews(this.mNews.get(position),this.glide,position);
+        viewHolder.UpdateUINews(this.mNews.get(position),this.glide);
 
     }
     //Set the sie of the recyclerView
