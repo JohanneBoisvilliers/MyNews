@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.RequestManager;
 import com.example.jbois.mynews.Models.News;
 import com.example.jbois.mynews.Models.NewsArticles;
 import com.example.jbois.mynews.R;
@@ -16,16 +17,18 @@ import java.util.List;
 
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder> {
 
-    private List<NewsArticles> mNews;
-
-    public ArticleAdapter(List<NewsArticles> news) {
-        mNews = news;
+    private List<NewsArticles> mNews;//List of articles
+    private RequestManager glide;
+    //Constructor
+    public ArticleAdapter(List<NewsArticles> news, RequestManager glide) {
+        this.mNews = news;
+        this.glide = glide;
     }
 
     @NonNull
     @Override
     public ArticleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // CREATE VIEW HOLDER AND INFLATING ITS XML LAYOUT
+        // Create viewHolder and inflating its xml
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.fragment_base_item, parent, false);
@@ -35,11 +38,13 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder> {
 
     @Override
     public void onBindViewHolder(ArticleViewHolder viewHolder,int position) {
-        viewHolder.UpdateUINews(this.mNews.get(position));
-    }
+        viewHolder.UpdateUINews(this.mNews.get(position),this.glide,position);
 
+    }
+    //Set the sie of the recyclerView
     @Override
     public int getItemCount() {
         return mNews.size();
     }
+
 }
