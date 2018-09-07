@@ -11,10 +11,10 @@
 
     <string-array name="requestList">
         <item>"home"</item>
-        <item>""</item>
-        <item>"TECHNOLOGY"</item>
-        <item>"SCIENCE"</item>
-        <item>"AUTOMOBILES"</item>
+        <item>home</item>
+        <item>"technology"</item>
+        <item>"science"</item>
+        <item>"automobiles"</item>
     </string-array>
 
 

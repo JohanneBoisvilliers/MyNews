@@ -3,11 +3,9 @@ package com.example.jbois.mynews.Controllers.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,25 +18,26 @@ import com.example.jbois.mynews.Models.News;
 import com.example.jbois.mynews.Models.NewsArticles;
 import com.example.jbois.mynews.R;
 import com.example.jbois.mynews.Utils.ItemClickSupport;
-import com.example.jbois.mynews.Utils.NewYorkTimesCall;
+import com.example.jbois.mynews.Utils.NewYorkTimesStreams;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Response;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BaseFragment extends Fragment implements NewYorkTimesCall.Callbacks{
+public class BaseFragment extends Fragment{
 
     //Create keys for our Bundle
     private static final String KEY_POSITION="position";
     private ArticleAdapter mAdapter;
     private List<NewsArticles> mFinalNewsList=new ArrayList<>();
+    private Disposable mDisposable;
 
     @BindView(R.id.fragment_main_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.test_retrofit) TextView textView;
@@ -47,14 +46,22 @@ public class BaseFragment extends Fragment implements NewYorkTimesCall.Callbacks
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //Get layout of BaseFragment
         View result = inflater.inflate(R.layout.fragment_base, container, false);
-
         //Get the base view from layout and serialise it
         ButterKnife.bind(this, result);
 
+        Bundle bundle = this.getArguments();
+        int position = bundle.getInt(KEY_POSITION);
+
         this.configureRecyclerView();
         this.configureOnClickRecyclerView();
-        this.executeHttpRequestWithRetrofit();
+        this.executeHttpRequestWithRetrofit(getResources().getStringArray(R.array.requestList)[position]);
         return result;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.disposeWhenDestroy();
     }
 
     //Method that will create a new instance of BaseFragment, and add data to its bundle.
@@ -108,17 +115,27 @@ public class BaseFragment extends Fragment implements NewYorkTimesCall.Callbacks
     // --HTTP REQUEST-- //
 
     // Execute HTTP request
-   private void executeHttpRequestWithRetrofit(){
-       NewYorkTimesCall.fetchArticles(this,"home");
-   }
-   @Override
-   // On request response, that method update the recyclerView's items
-   public void onResponse(News newslist) {
-        this.updateUI(newslist);
-   }
-   @Override
-   public void onFailure(){}
+   private void executeHttpRequestWithRetrofit(String section){
+       // 1.2 - Execute the stream subscribing to Observable defined inside GithubStream
+       this.mDisposable = NewYorkTimesStreams.streamFetchTopStoriesArticles(section).subscribeWith(new DisposableObserver<News>() {
+           @Override
+           public void onNext(News newslist) {
+               updateUI(newslist);
+           }
 
+           @Override
+           public void onError(Throwable e) {
+           }
+
+           @Override
+           public void onComplete() {
+           }
+       });
+   }
+
+   private void disposeWhenDestroy(){
+        if (this.mDisposable != null && !this.mDisposable.isDisposed()) this.mDisposable.dispose();
+    }
     // --UPDATE UI-- //
 
     //get the list of articles from request response, add elements into a list, and notify to the adapter that some data as changed

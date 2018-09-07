@@ -43,7 +43,7 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder{
             glide.load(news.getMultimedia().get(0).getUrl()).apply(RequestOptions.centerInsideTransform()).into(imageOfArticle);
         }
         this.articleTitleTextView.setText(news.getTitle());
-        this.categoryTextView.setText(news.getSection()+">"+news.getSubsection());
+        this.categoryTextView.setText(news.getSection()+" > "+news.getSubsection());
         this.ConvertDate(news);
         this.mUrl = news.getShortUrl();
     }
