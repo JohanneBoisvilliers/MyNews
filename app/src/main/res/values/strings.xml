@@ -2,19 +2,19 @@
     <string name="app_name">MyNews</string>
 
     <string-array name="pageTitleOfViewPager">
-        <item>"TOP STORIES"</item>
-        <item>"MOST POPULAR"</item>
-        <item>"TECHNOLOGY"</item>
-        <item>"SCIENCE"</item>
-        <item>"AUTOMOBILES"</item>
+        <item>TOP STORIES</item>
+        <item>MOST POPULAR</item>
+        <item>TECHNOLOGY</item>
+        <item>SCIENCE</item>
+        <item>AUTOMOBILES</item>
     </string-array>
 
     <string-array name="requestList">
-        <item>"home"</item>
         <item>home</item>
-        <item>"technology"</item>
-        <item>"science"</item>
-        <item>"automobiles"</item>
+        <item>all-sections</item>
+        <item>technology</item>
+        <item>science</item>
+        <item>automobiles</item>
     </string-array>
 
 

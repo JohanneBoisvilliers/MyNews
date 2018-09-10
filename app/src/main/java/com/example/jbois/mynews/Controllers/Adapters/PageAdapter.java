@@ -2,6 +2,7 @@ package com.example.jbois.mynews.Controllers.Adapters;
 
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -25,7 +26,7 @@ public class PageAdapter extends FragmentStatePagerAdapter {
         return mTitlesOfPageVP[position];
     }
 
-    //Method that get the position of the actual page in the viewpager
+    //Method that create a new instance of fragment
     @Override
     public Fragment getItem(int position) {
         //Page to return
@@ -35,5 +36,10 @@ public class PageAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return (5);
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return super.getItemPosition(object);
     }
 }

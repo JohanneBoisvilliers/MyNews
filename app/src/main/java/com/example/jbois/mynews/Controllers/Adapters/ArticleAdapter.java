@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.RequestManager;
 import com.example.jbois.mynews.Models.News;
-import com.example.jbois.mynews.Models.NewsArticles;
 import com.example.jbois.mynews.R;
 import com.example.jbois.mynews.Views.ArticleViewHolder;
 
@@ -17,10 +16,10 @@ import java.util.List;
 
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder> {
 
-    private List<NewsArticles> mNews;//List of articles
+    private List<News.Articles> mNews;//List of articles
     private RequestManager glide;
     //Constructor
-    public ArticleAdapter(List<NewsArticles> news, RequestManager glide) {
+    public ArticleAdapter(List<News.Articles> news, RequestManager glide) {
         this.mNews = news;
         this.glide = glide;
     }
@@ -41,10 +40,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder> {
         viewHolder.UpdateUINews(this.mNews.get(position),this.glide);
 
     }
-    //Set the sie of the recyclerView
+    //Set the size of the recyclerView
     @Override
     public int getItemCount() {
-        return mNews.size();
+        return this.mNews.size();
     }
 
 }

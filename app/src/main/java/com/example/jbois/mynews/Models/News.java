@@ -4,76 +4,85 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 public class News {
-    @SerializedName("status")
-    @Expose
-    private String status;
-    @SerializedName("copyright")
-    @Expose
-    private String copyright;
-    @SerializedName("section")
-    @Expose
-    private String section;
-    @SerializedName("last_updated")
-    @Expose
-    private String lastUpdated;
-    @SerializedName("num_results")
-    @Expose
-    private Integer numResults;
     @SerializedName("results")
     @Expose
-    private List<NewsArticles> results = null;
+    private List<Articles> results = null;
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getCopyright() {
-        return copyright;
-    }
-
-    public void setCopyright(String copyright) {
-        this.copyright = copyright;
-    }
-
-    public String getSection() {
-        return section;
-    }
-
-    public void setSection(String section) {
-        this.section = section;
-    }
-
-    public String getLastUpdated() {
-        return lastUpdated;
-    }
-
-    public void setLastUpdated(String lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
-    public Integer getNumResults() {
-        return numResults;
-    }
-
-    public void setNumResults(Integer numResults) {
-        this.numResults = numResults;
-    }
-
-    public List<NewsArticles> getResults() {
+    public List<Articles> getResults() {
         return results;
     }
 
-    public void setResults(List<NewsArticles> results) {
-        this.results = results;
+    public class Articles{
+        @SerializedName("section")
+        @Expose
+        private String section;
+        @SerializedName("subsection")
+        @Expose
+        private String subsection;
+        @SerializedName("title")
+        @Expose
+        private String title;
+        @SerializedName("multimedia")
+        @Expose
+        private List<MediasArticles> multimedia = null;
+        @SerializedName("published_date")
+        @Expose
+        private String publishedDate;
+        @SerializedName("short_url")
+        @Expose
+        private String shortUrl;
+        @SerializedName("media")
+        @Expose
+        private List<MediasArticles> media = null;
+
+        public String getSection () {
+            return section; }
+        public String getSubsection() {
+            return subsection;
+        }
+        public String getTitle() {
+            return title;
+        }
+        public String getPublishedDate() {
+            return publishedDate;
+        }
+        public String getShortUrl() {
+            return shortUrl;
+        }
+        public List<MediasArticles> getMultimedia() {
+            return multimedia;
+        }
+        public List<MediasArticles> getMedia() {
+            return media;
+        }
     }
 
-}
+    public class MediasArticles {
+
+        @SerializedName("url")
+        @Expose
+        private String url;
+
+        public String getUrl() {
+            return url;
+        }
+        @SerializedName("media-metadata")
+        @Expose
+        private List<MediaMetada> mediaMetadata = null;
+
+        public List<MediaMetada> getMediaMetadata() {
+            return mediaMetadata;
+        }
+    }
+
+    public class MediaMetada {
+        @SerializedName("url")
+        @Expose
+        private String url;
+
+        public String getUrl() {
+            return url;
+        }
+    }
+    }

@@ -15,6 +15,8 @@ public interface NewYorkTimeService {
     // Set the url to request
     @GET("svc/topstories/v2/{section}.json?api-key=4e02cd95f9de4ade810f04de4c8f51ff")
     Observable<News> getArticles(@Path("section")String section);
+    @GET("svc/mostpopular/v2/mostviewed/{section}/7.json?api-key=4e02cd95f9de4ade810f04de4c8f51ff")
+    Observable<News> getMostViewedArticles(@Path("section")String section);
 
     // Set a listener to know all about request
     OkHttpClient okHttpClient = new OkHttpClient.Builder()
