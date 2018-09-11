@@ -2,17 +2,7 @@
 <resources>
     <color name="colorPrimary">#CCCCCC</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-
-    <!-- Array of colors that will be used by ViewPager as background colors -->
-    <array name="colorPagesViewPager">
-        <item>#EDD9CF</item>
-        <item>#BED4D6</item>
-        <item>#ADCEB7</item>
-        <item>#F7CF8B</item>
-        <item>#FD96A2</item>
-        <item>#EDD9CF</item>
-        <item>#BED4D6</item>
-        <item>#ADCEB7</item>
-    </array>
+    <color name="colorAccent">#a5a5a5</color>
+    <color name="colorTextToolbar">#ffffff</color>
+    <color name="lineUnderEditText">#35cecb</color>
 </resources>

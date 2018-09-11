@@ -41,7 +41,6 @@ public class BaseFragment extends Fragment{
     private Disposable mDisposable;
 
     @BindView(R.id.fragment_main_recycler_view) RecyclerView recyclerView;
-    @BindView(R.id.test_retrofit) TextView textView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
