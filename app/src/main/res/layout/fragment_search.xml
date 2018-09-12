@@ -14,6 +14,7 @@
         android:layout_margin="10dp"
         android:textColor="@color/colorAccent"/>
     <LinearLayout
+        android:id="@+id/date_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="fill_horizontal"
@@ -94,6 +95,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/button_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"

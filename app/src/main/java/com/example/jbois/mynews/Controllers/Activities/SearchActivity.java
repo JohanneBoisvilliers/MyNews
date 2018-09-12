@@ -27,7 +27,11 @@ public class SearchActivity extends AppCompatActivity {
 
         this.setPageTitle();
         this.configureAndShowSearchFragment();
-        //this.configureFragmentContent();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("TITLE", mPageTitle);
+        mSearchFragment.setArguments(bundle);
+
     }
     //Set the title in terms of what button user has pressed on the MainActivity toolbar and set the home button visible
     private void setPageTitle(){
@@ -48,13 +52,6 @@ public class SearchActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.search_fragment_container, mSearchFragment)
                     .commit();
-        }
-    }
-
-    private void configureFragmentContent (){
-        if(mPageTitle.equals("Search Articles")){
-        }else{
-
         }
     }
 
