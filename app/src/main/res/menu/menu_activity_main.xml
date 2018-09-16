@@ -9,7 +9,20 @@
     <item
         android:id="@+id/menu_activity_main_params"
         android:icon="@drawable/ic_more_vert_white_24dp"
-        app:showAsAction="ifRoom"
-        android:title="Paramètres">
+        app:showAsAction="never"
+        android:title="Notifications">
     </item>
+    <item
+        android:id="@+id/menu_activity_main_help"
+        android:icon="@drawable/ic_more_vert_white_24dp"
+        app:showAsAction="never"
+        android:title="Help">
+    </item>
+    <item
+        android:id="@+id/menu_activity_main_about"
+        android:icon="@drawable/ic_more_vert_white_24dp"
+        app:showAsAction="never"
+        android:title="About">
+    </item>
+
 </menu>

@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.activity_main_viewpager)ViewPager pager;
     @BindView(R.id.activity_main_tabs) TabLayout tabs;
+    public final static String KEY_PAGE_TITLE="pageTitle";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +51,18 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_activity_main_params:
                 Intent intentNotifications = new Intent(this,SearchActivity.class);
-                intentNotifications.putExtra("pageTitle","Notifications");
+                intentNotifications.putExtra(KEY_PAGE_TITLE,"Notifications");
                 startActivity(intentNotifications);
+                return true;
+            case R.id.menu_activity_main_help:
+                Toast.makeText(this, "Please contact me for any questions !", Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.menu_activity_main_about:
+                Toast.makeText(this, "MyNews version 1.0.0, 12/09/2018", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.menu_activity_main_search:
                 Intent intentSearch = new Intent(this,SearchActivity.class);
-                intentSearch.putExtra("pageTitle","Search Articles");
+                intentSearch.putExtra(KEY_PAGE_TITLE,"Search Articles");
                 startActivity(intentSearch);
                 return true;
             default:

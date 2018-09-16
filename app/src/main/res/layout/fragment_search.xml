@@ -8,10 +8,12 @@
     tools:context=".Controllers.Fragments.SearchFragment">
 
     <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/search_term_query"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Search query term"
+        android:hint="Search query term"
         android:layout_margin="10dp"
+        android:singleLine="true"
         android:textColor="@color/colorAccent"/>
     <LinearLayout
         android:id="@+id/date_options"
@@ -19,18 +21,38 @@
         android:layout_height="wrap_content"
         android:layout_gravity="fill_horizontal"
         android:orientation="horizontal">
-        <EditText
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Begin Date"
-            android:layout_weight="1"
-            android:layout_margin="10dp"/>
-        <EditText
+            android:layout_weight="1">
+            <EditText
+                android:id="@+id/select_begin_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Begin Date"
+                android:editable="false"
+                android:focusableInTouchMode="false"
+                android:drawableRight="@drawable/sharp_arrow_drop_down_black_18"
+                android:text="Select a date"
+                android:layout_margin="10dp"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="End Date"
-            android:layout_weight="1"
-            android:layout_margin="10dp"/>
+            android:layout_weight="1">
+            <EditText
+                android:id="@+id/select_end_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="End Date"
+                android:text="Select a date"
+                android:editable="false"
+                android:focusableInTouchMode="false"
+                android:drawableRight="@drawable/sharp_arrow_drop_down_black_18"
+                android:layout_margin="10dp"/>
+        </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
     <LinearLayout
