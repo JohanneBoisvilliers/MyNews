@@ -26,11 +26,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Controllers.Activities.MainActivity" />
         </activity>
-        <activity android:name=".Controllers.Activities.SearchActivity"
+        <activity
+            android:name=".Controllers.Activities.SearchActivity"
             android:parentActivityName=".Controllers.Activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Controllers.Activities.MainActivity" />
+        </activity>
+        <activity android:name=".Controllers.Activities.ResultSearchActivity"
+            android:parentActivityName=".Controllers.Activities.SearchActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Controllers.Activities.SearchActivity" />
         </activity>
     </application>
 

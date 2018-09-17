@@ -78,7 +78,7 @@ public class BaseFragment extends Fragment{
     // --SETTINGS-- //
 
     //Configure RecyclerView, Adapter, LayoutManager & glue it together
-    private void configureRecyclerView(List list){
+    protected void configureRecyclerView(List list){
         //Create mAdapter passing the list of users
         this.mAdapter = new ArticleAdapter(list, Glide.with(this));
         //Attach the mAdapter to the recyclerview to populate items

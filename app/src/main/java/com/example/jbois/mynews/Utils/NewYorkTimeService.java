@@ -10,6 +10,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface NewYorkTimeService {
     // Set the url to request
@@ -17,6 +18,8 @@ public interface NewYorkTimeService {
     Observable<News> getArticles(@Path("section")String section);
     @GET("svc/mostpopular/v2/mostviewed/{section}/7.json?api-key=4e02cd95f9de4ade810f04de4c8f51ff")
     Observable<News> getMostViewedArticles(@Path("section")String section);
+    @GET("svc/search/v2/articlesearch.json?q={search}&sort=newest&api-key=4e02cd95f9de4ade810f04de4c8f51ff")
+    Observable<News> getSearchArticles(@Path("search")String section);
 
     // Set a listener to know all about request
     OkHttpClient okHttpClient = new OkHttpClient.Builder()

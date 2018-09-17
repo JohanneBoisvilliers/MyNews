@@ -2,8 +2,11 @@ package com.example.jbois.mynews.Controllers.Fragments;
 
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -13,15 +16,18 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import com.example.jbois.mynews.Controllers.Activities.ResultSearchActivity;
+import com.example.jbois.mynews.Controllers.Activities.SearchActivity;
+import com.example.jbois.mynews.Controllers.Activities.WebViewArticlesActivity;
 import com.example.jbois.mynews.R;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.annotations.Nullable;
 
+import static com.example.jbois.mynews.Controllers.Activities.MainActivity.KEY_PAGE_TITLE;
 import static com.example.jbois.mynews.Controllers.Activities.SearchActivity.KEY_TITLE;
 
 /**
@@ -49,13 +55,18 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this,view);
+
         mSearchButton.setEnabled(false);
+
         this.getBundleToSetTitle();
         this.configureActivityContent();
         this.configureDatePicker();
         this.textChangedListener();
+        this.listenerOnSearchButton();
+
         return view;
     }
+
     //Get into the bundle the title sent by the activity
     private void getBundleToSetTitle(){
         Bundle bundle = this.getArguments();
@@ -63,15 +74,18 @@ public class SearchFragment extends Fragment {
     }
     //set the title of the toolbar according to what bundle is containing
     private void configureActivityContent(){
-        if(mPageTitle.contentEquals("Search Articles")){
-            mNotificationOption.setVisibility(View.INVISIBLE);
-            mNotificationOption.getLayoutParams().height=0;
-        }else{
-            mDateOption.setVisibility(View.INVISIBLE);
-            mDateOption.getLayoutParams().height=0;
-            mSearchButton.setVisibility(View.INVISIBLE);
-            mSearchButton.getLayoutParams().height=0;
-        }
+            if(mPageTitle==null || mPageTitle.contentEquals("Search Articles")){
+                mNotificationOption.setVisibility(View.INVISIBLE);
+                mNotificationOption.getLayoutParams().height=0;
+                if(mPageTitle==null){
+                    ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Search Articles");
+                }
+            }else{
+                mDateOption.setVisibility(View.INVISIBLE);
+                mDateOption.getLayoutParams().height=0;
+                mSearchButton.setVisibility(View.INVISIBLE);
+                mSearchButton.getLayoutParams().height=0;
+            }
     }
     //Create a new date picker dialog, set mMycalendar with the date picked by the user, and add a listener on two editTexts
     private void configureDatePicker(){
@@ -130,4 +144,17 @@ public class SearchFragment extends Fragment {
         });
     }
 
+    private void listenerOnSearchButton(){
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                transferInfosToResultActivity();
+            }
+        });
+    }
+    private void transferInfosToResultActivity(){
+        Intent intent = new Intent(getActivity(), ResultSearchActivity.class);
+        intent.putExtra("QueryTerms",mSearchTerm.getText());
+        startActivity(intent);
+    }
 }
