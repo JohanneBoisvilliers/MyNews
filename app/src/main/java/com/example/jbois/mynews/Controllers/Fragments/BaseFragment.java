@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.jbois.mynews.Controllers.Activities.WebViewArticlesActivity;
@@ -119,7 +117,7 @@ public class BaseFragment extends Fragment{
     // --HTTP REQUEST-- //
 
     // Execute HTTP request
-   private void executeHttpRequestWithRetrofit(String section, final int position){
+   protected void executeHttpRequestWithRetrofit(String section, final int position){
         if (position==1){
             this.mDisposable = NewYorkTimesStreams.streamFetchMostViewedArticles(section).subscribeWith(new DisposableObserver<News>() {
                 @Override
@@ -152,13 +150,13 @@ public class BaseFragment extends Fragment{
         }
    }
 
-   private void disposeWhenDestroy(){
+   protected void disposeWhenDestroy(){
         if (this.mDisposable != null && !this.mDisposable.isDisposed()) this.mDisposable.dispose();
     }
     // --UPDATE UI-- //
 
     //get the list of articles from request response, add elements into a list, and notify to the adapter that some data as changed
-    private void updateUI(News newsList,int position,List list){
+    protected void updateUI(News newsList,int position,List list){
         if(position==1){
             this.settingListToUpdateUI(newsList,list);
             this.configureRecyclerView(mMostViewedList);

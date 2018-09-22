@@ -4,30 +4,63 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
+import com.example.jbois.mynews.Controllers.Fragments.ResultSearchFragment;
 import com.example.jbois.mynews.R;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.QUERY_TERMS;
 
 
 public class ResultSearchActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
 
+    private ResultSearchFragment mResultSearchFragment;
+    private String mQueryTerms;
+    private ArrayList<String> mCategory;
+    public static final String SEARCH_QUERY_TERMS="QueryTerms";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_result_search);
+        setContentView(R.layout.activity_search);
 
         ButterKnife.bind(this);
 
         this.setPageTitle();
+        this.configureAndShowSearchFragment();
+        this.getInfosForResearch();
     }
 
-    //Set the title in terms of what button user has pressed on the MainActivity toolbar and set the home button visible
+    //Set the  page title
     private void setPageTitle(){
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Results");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void getInfosForResearch(){
+        mQueryTerms=getIntent().getStringExtra(QUERY_TERMS);
+        Bundle args = new Bundle();
+        args.putString(SEARCH_QUERY_TERMS, mQueryTerms);
+        mResultSearchFragment.setArguments(args);
+    }
+
+    private void configureAndShowSearchFragment(){
+        //Get FragmentManager (Support) and Try to find existing instance of fragment in FrameLayout container
+        mResultSearchFragment = (ResultSearchFragment) getSupportFragmentManager().findFragmentById(R.id.search_fragment_container);
+
+        if (mResultSearchFragment == null) {
+            //Create new main fragment
+            mResultSearchFragment = new ResultSearchFragment();
+            //Add it to FrameLayout container
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.search_fragment_container, mResultSearchFragment)
+                    .commit();
+        }
     }
 }

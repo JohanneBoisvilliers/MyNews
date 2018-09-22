@@ -6,28 +6,30 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.jbois.mynews.Controllers.Activities.ResultSearchActivity;
-import com.example.jbois.mynews.Controllers.Activities.SearchActivity;
-import com.example.jbois.mynews.Controllers.Activities.WebViewArticlesActivity;
 import com.example.jbois.mynews.R;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import io.reactivex.annotations.Nullable;
 
-import static com.example.jbois.mynews.Controllers.Activities.MainActivity.KEY_PAGE_TITLE;
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.BindViews;
+import butterknife.ButterKnife;
+
 import static com.example.jbois.mynews.Controllers.Activities.SearchActivity.KEY_TITLE;
 
 /**
@@ -41,11 +43,16 @@ public class SearchFragment extends Fragment {
     @BindView(R.id.select_begin_date) EditText mBeginDate;
     @BindView(R.id.select_end_date) EditText mEndDate;
     @BindView(R.id.search_term_query) EditText mSearchTerm;
+    @BindViews({ R.id.checkbox_arts, R.id.checkbox_business, R.id.checkbox_entrepreneurs,R.id.checkbox_politics,R.id.checkbox_sports,R.id.checkbox_travels }) List<CheckBox> mCheckBoxList;
 
     private String mPageTitle;
     private DateTime mMyCalendar = new DateTime();
     private DatePickerDialog.OnDateSetListener mDate;
     private EditText mEditText;
+    private boolean mTestExistingTerms=false;
+    private ArrayList<String> mCategory=new ArrayList<>();
+    public static final String QUERY_TERMS= "Query terms";
+    public static final String CATEGORY="Category";
 
     public SearchFragment() {}
 
@@ -55,8 +62,6 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this,view);
-
-        mSearchButton.setEnabled(false);
 
         this.getBundleToSetTitle();
         this.configureActivityContent();
@@ -136,25 +141,42 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mSearchButton.setEnabled(s.toString().length() != 0);
+                mTestExistingTerms = true;
             }
 
             @Override
             public void afterTextChanged(Editable s) {}
         });
     }
-
+    //Listener to know what to do when user press the search button
     private void listenerOnSearchButton(){
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                transferInfosToResultActivity();
+                if(mTestExistingTerms && testCheckBoxes()){
+                    transferInfosToResultActivity();
+                }else{
+                    Toast.makeText(getContext(), "Please enter a search query term and check at least one category box", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
+    //Create an intent to transfer the terms set into the editText to the ResultSearch activity
     private void transferInfosToResultActivity(){
         Intent intent = new Intent(getActivity(), ResultSearchActivity.class);
-        intent.putExtra("QueryTerms",mSearchTerm.getText());
+        intent.putExtra(QUERY_TERMS,mSearchTerm.getText().toString());
+        intent.putStringArrayListExtra(CATEGORY,mCategory);
         startActivity(intent);
+    }
+    //check if there is at least one box checked
+    private boolean testCheckBoxes(){
+        boolean testCheck = false;
+        for (int i=0;i<mCheckBoxList.size();i++){
+            if(mCheckBoxList.get(i).isChecked()){
+                testCheck = true;
+                mCategory.add((String)mCheckBoxList.get(i).getText());
+            }
+        }
+        return testCheck;
     }
 }

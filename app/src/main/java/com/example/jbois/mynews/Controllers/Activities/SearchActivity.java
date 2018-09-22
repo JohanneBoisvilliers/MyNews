@@ -46,7 +46,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private void configureAndShowSearchFragment(){
         //Get FragmentManager (Support) and Try to find existing instance of fragment in FrameLayout container
-        mSearchFragment = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.search_fragment_container);
+        mSearchFragment = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.main_fragment_search);
 
         if (mSearchFragment == null) {
             //Create new main fragment

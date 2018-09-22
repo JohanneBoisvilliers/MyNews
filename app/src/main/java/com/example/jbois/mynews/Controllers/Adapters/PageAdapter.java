@@ -1,17 +1,11 @@
 package com.example.jbois.mynews.Controllers.Adapters;
 
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.example.jbois.mynews.Controllers.Fragments.BaseFragment;
-import com.example.jbois.mynews.R;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class PageAdapter extends FragmentStatePagerAdapter {
     private String[] mTitlesOfPageVP;
