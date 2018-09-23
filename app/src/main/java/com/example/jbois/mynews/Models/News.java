@@ -39,6 +39,9 @@ public class News {
         @SerializedName("short_url")
         @Expose
         private String shortUrl;
+        @SerializedName("url")
+        @Expose
+        private String url;
         @SerializedName("media")
         @Expose
         private List<MediasArticles> media = null;
@@ -73,6 +76,14 @@ public class News {
             return media;
         }
         public void setMedia(List<MediasArticles> media) { this.media = media; }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
     }
 
     public class MediasArticles {

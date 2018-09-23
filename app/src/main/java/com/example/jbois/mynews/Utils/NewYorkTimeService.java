@@ -27,6 +27,7 @@ public interface NewYorkTimeService {
     @GET("svc/search/v2/articlesearch.json")
     Observable<SearchResult> getSearchArticles(
             @Query("q") String section,
+            @Query("fq")String category,
             @Query("sort") String sort,
             @Query("api-key") String apiKey);
 

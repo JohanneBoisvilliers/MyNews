@@ -8,11 +8,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -53,6 +55,7 @@ public class SearchFragment extends Fragment {
     private ArrayList<String> mCategory=new ArrayList<>();
     public static final String QUERY_TERMS= "Query terms";
     public static final String CATEGORY="Category";
+    private boolean mTestCheck;
 
     public SearchFragment() {}
 
@@ -155,6 +158,7 @@ public class SearchFragment extends Fragment {
             public void onClick(View view) {
                 if(mTestExistingTerms && testCheckBoxes()){
                     transferInfosToResultActivity();
+                    Log.e("CATEGORY SIZE",""+mCategory.size());
                 }else{
                     Toast.makeText(getContext(), "Please enter a search query term and check at least one category box", Toast.LENGTH_SHORT).show();
                 }
@@ -170,13 +174,28 @@ public class SearchFragment extends Fragment {
     }
     //check if there is at least one box checked
     private boolean testCheckBoxes(){
-        boolean testCheck = false;
         for (int i=0;i<mCheckBoxList.size();i++){
-            if(mCheckBoxList.get(i).isChecked()){
-                testCheck = true;
-                mCategory.add((String)mCheckBoxList.get(i).getText());
+                if(mCheckBoxList.get(i).isChecked()){
+                    mCategory.add(mCheckBoxList.get(i).getText().toString());
+                }
+            mCheckBoxList.get(i).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                    mCategory.clear();
+                    for (int i=0;i<mCheckBoxList.size();i++){
+                        if(mCheckBoxList.get(i).isChecked()){
+                            mCategory.add(mCheckBoxList.get(i).getText().toString());
+                        }
+                    }
+                    }
+                }
+            );
+            for (int j=0;j<mCheckBoxList.size();j++){
+                if(mCheckBoxList.get(j).isChecked()){
+                    mTestCheck=true;
+                }
             }
         }
-        return testCheck;
+        return mTestCheck;
     }
 }

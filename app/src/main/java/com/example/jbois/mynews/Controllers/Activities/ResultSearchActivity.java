@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.CATEGORY;
 import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.QUERY_TERMS;
 
 
@@ -23,6 +24,7 @@ public class ResultSearchActivity extends AppCompatActivity {
     private String mQueryTerms;
     private ArrayList<String> mCategory;
     public static final String SEARCH_QUERY_TERMS="QueryTerms";
+    public static final String CHECKBOX_CATEGORY="categoryFromCheckboxes";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +47,10 @@ public class ResultSearchActivity extends AppCompatActivity {
 
     private void getInfosForResearch(){
         mQueryTerms=getIntent().getStringExtra(QUERY_TERMS);
+        mCategory=getIntent().getStringArrayListExtra(CATEGORY);
         Bundle args = new Bundle();
         args.putString(SEARCH_QUERY_TERMS, mQueryTerms);
+        args.putStringArrayList(CHECKBOX_CATEGORY,mCategory);
         mResultSearchFragment.setArguments(args);
     }
 

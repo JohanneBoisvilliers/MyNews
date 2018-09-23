@@ -48,7 +48,7 @@ public class BaseFragment extends Fragment{
         ButterKnife.bind(this, result);
 
         this.configureRecyclerView(mTopStoriesList);
-        this.configureOnClickRecyclerView();
+        this.configureOnClickRecyclerView(mTopStoriesList);
         this.getPositionToRequest();
 
         return result;
@@ -85,13 +85,13 @@ public class BaseFragment extends Fragment{
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
     //Configure item click on RecyclerView
-    private void configureOnClickRecyclerView(){
+    protected void configureOnClickRecyclerView(final List<News.Articles> listUrl){
         ItemClickSupport.addTo(recyclerView, R.layout.fragment_base_item)
                 .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                         Intent intent = new Intent(getActivity(), WebViewArticlesActivity.class);
-                        String url = mTopStoriesList.get(position).getShortUrl();
+                        String url = listUrl.get(position).getUrl();
                         intent.putExtra("URL",url);
                         startActivity(intent);
                     }
@@ -160,6 +160,7 @@ public class BaseFragment extends Fragment{
         if(position==1){
             this.settingListToUpdateUI(newsList,list);
             this.configureRecyclerView(mMostViewedList);
+            this.configureOnClickRecyclerView(mMostViewedList);
         }else{
             this.settingListToUpdateUI(newsList,list);
         }
