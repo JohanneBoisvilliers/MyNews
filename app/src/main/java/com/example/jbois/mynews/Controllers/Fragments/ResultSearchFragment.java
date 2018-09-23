@@ -17,6 +17,10 @@ import com.example.jbois.mynews.R;
 import com.example.jbois.mynews.Utils.ItemClickSupport;
 import com.example.jbois.mynews.Utils.NewYorkTimesStreams;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +30,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
 import static com.example.jbois.mynews.Controllers.Activities.ResultSearchActivity.CHECKBOX_CATEGORY;
+import static com.example.jbois.mynews.Controllers.Activities.ResultSearchActivity.GET_BEGIN_DATE;
+import static com.example.jbois.mynews.Controllers.Activities.ResultSearchActivity.GET_END_DATE;
 import static com.example.jbois.mynews.Controllers.Activities.ResultSearchActivity.SEARCH_QUERY_TERMS;
 import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.CATEGORY;
 
@@ -36,7 +42,7 @@ public class ResultSearchFragment extends BaseFragment {
 
     private Disposable mDisposable;
     private ArticleAdapter mAdapter;
-    private String mTerms;
+    private String mTerms,mBeginDate,mEndDate,mTempBeginDate,mTempEndDate;
     private List<News.Articles> mSearchArticlesList =new ArrayList<>();
     private List<SearchResult.Doc> mTempList =new ArrayList<>();
     private ArrayList<String> mCategory=new ArrayList<>();
@@ -51,7 +57,9 @@ public class ResultSearchFragment extends BaseFragment {
         ButterKnife.bind(this,result);
 
         this.getSearchQueryTermsForRequest();
-        this.executeHttpRequestWithRetrofit(mTerms,0,"news_desk:("+mTermForFQParam+")");
+        mBeginDate=this.convertDateToRequest(mTempBeginDate);
+        mEndDate=this.convertDateToRequest(mTempEndDate);
+        this.executeHttpRequestWithRetrofit(mTerms,0,"news_desk:("+mTermForFQParam+")",mBeginDate,mEndDate);
         super.configureRecyclerView(mSearchArticlesList);
         super.configureOnClickRecyclerView(mSearchArticlesList);
 
@@ -62,23 +70,36 @@ public class ResultSearchFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
     }
-
+    //get infos to know what to put in request url
     private void getSearchQueryTermsForRequest(){
         Bundle bundle = this. getArguments();
         mTerms=bundle.getString(SEARCH_QUERY_TERMS);
         mCategory.addAll(bundle.getStringArrayList(CHECKBOX_CATEGORY));
+        mTempBeginDate=bundle.getString(GET_BEGIN_DATE);
+        mTempEndDate=bundle.getString(GET_END_DATE);
         this.constructPhraseAccordingToCheckboxes();
     }
+    //after picking the dates sent by activity we have to convert them to have a yyyyMMdd format for request
+    private String convertDateToRequest(String dateToConvert){
+        String pattern = "dd/MM/yy";
+        DateTimeFormatter dtf =  DateTimeFormat.forPattern(pattern);
+        DateTime jodatime = dtf.parseDateTime(dateToConvert);
+        DateTimeFormatter dtfOut = DateTimeFormat.forPattern("yyyyMMdd");
 
+        dateToConvert=dtfOut.print(jodatime);
+
+        return dateToConvert;
+    }
+    //API need a particular format to search in customs category(sports...Arts..)so we format a string for request
     private String constructPhraseAccordingToCheckboxes(){
         for(String str : mCategory){
             mTermForFQParam +="\""+str+"\""+" ";
         }
         return mTermForFQParam;
     }
-
-    protected void executeHttpRequestWithRetrofit(String search, int position,String category) {
-        this.mDisposable = NewYorkTimesStreams.streamFetchSearchArticles(search,category).subscribeWith(new DisposableObserver<SearchResult>() {
+    //execute the request according to parameters picked by the user
+    protected void executeHttpRequestWithRetrofit(String search, int position,String category,String beginDate,String endDate) {
+        this.mDisposable = NewYorkTimesStreams.streamFetchSearchArticles(search,category,beginDate,endDate).subscribeWith(new DisposableObserver<SearchResult>() {
             @Override
             public void onNext(SearchResult newslist) {
                 mTempList.addAll(newslist.getResponse().getDocs());
@@ -94,7 +115,8 @@ public class ResultSearchFragment extends BaseFragment {
             }
         });
     }
-
+    //Search API return a different json object than topStories and mostPopular, but we want to keep the same adapter and prototype,
+    // so that method convert Search API object into a topStories object like.
     private void listConverter(List<SearchResult.Doc> docList, List<News.Articles> articlesList){
         for(int i=0;i<docList.size();i++){
             articlesList.add(new News().new Articles());

@@ -55,6 +55,8 @@ public class SearchFragment extends Fragment {
     private ArrayList<String> mCategory=new ArrayList<>();
     public static final String QUERY_TERMS= "Query terms";
     public static final String CATEGORY="Category";
+    public static final String BEGIN_DATE="beginDate";
+    public static final String END_DATE="endDate";
     private boolean mTestCheck;
 
     public SearchFragment() {}
@@ -170,6 +172,8 @@ public class SearchFragment extends Fragment {
         Intent intent = new Intent(getActivity(), ResultSearchActivity.class);
         intent.putExtra(QUERY_TERMS,mSearchTerm.getText().toString());
         intent.putStringArrayListExtra(CATEGORY,mCategory);
+        intent.putExtra(BEGIN_DATE,mBeginDate.getText().toString());
+        intent.putExtra(END_DATE,mEndDate.getText().toString());
         startActivity(intent);
     }
     //check if there is at least one box checked

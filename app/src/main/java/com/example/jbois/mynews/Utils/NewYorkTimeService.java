@@ -28,6 +28,8 @@ public interface NewYorkTimeService {
     Observable<SearchResult> getSearchArticles(
             @Query("q") String section,
             @Query("fq")String category,
+            @Query("begin_date")String beginDate,
+            @Query("end_date")String endDate,
             @Query("sort") String sort,
             @Query("api-key") String apiKey);
 
