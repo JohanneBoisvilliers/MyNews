@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.jbois.mynews.Controllers.Activities.WebViewArticlesActivity;
 import com.example.jbois.mynews.Controllers.Adapters.ArticleAdapter;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Optional;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
@@ -82,14 +84,17 @@ public class ResultSearchFragment extends BaseFragment {
     //after picking the dates sent by activity we have to convert them to have a yyyyMMdd format for request
     private String convertDateToRequest(String dateToConvert){
         String pattern = "dd/MM/yy";
-        DateTimeFormatter dtf =  DateTimeFormat.forPattern(pattern);
-        DateTime jodatime = dtf.parseDateTime(dateToConvert);
-        DateTimeFormatter dtfOut = DateTimeFormat.forPattern("yyyyMMdd");
-
-        dateToConvert=dtfOut.print(jodatime);
-
+        if(!dateToConvert.equals("Select a date")){
+            DateTimeFormatter dtf =  DateTimeFormat.forPattern(pattern);
+            DateTime jodatime = dtf.parseDateTime(dateToConvert);
+            DateTimeFormatter dtfOut = DateTimeFormat.forPattern("yyyyMMdd");
+            dateToConvert=dtfOut.print(jodatime);
+        }else{
+            dateToConvert=null;
+        }
         return dateToConvert;
     }
+
     //API need a particular format to search in customs category(sports...Arts..)so we format a string for request
     private String constructPhraseAccordingToCheckboxes(){
         for(String str : mCategory){
@@ -98,10 +103,13 @@ public class ResultSearchFragment extends BaseFragment {
         return mTermForFQParam;
     }
     //execute the request according to parameters picked by the user
-    protected void executeHttpRequestWithRetrofit(String search, int position,String category,String beginDate,String endDate) {
+    protected void executeHttpRequestWithRetrofit(String search, int position, String category, String beginDate, String endDate) {
         this.mDisposable = NewYorkTimesStreams.streamFetchSearchArticles(search,category,beginDate,endDate).subscribeWith(new DisposableObserver<SearchResult>() {
             @Override
             public void onNext(SearchResult newslist) {
+                if (newslist.getResponse().getDocs().size() == 0) {
+                    Toast.makeText(getContext(),"There's no articles corresponding to your research",Toast.LENGTH_LONG).show();
+                }
                 mTempList.addAll(newslist.getResponse().getDocs());
                 listConverter(mTempList,mSearchArticlesList);
                 recyclerView.getAdapter().notifyDataSetChanged();

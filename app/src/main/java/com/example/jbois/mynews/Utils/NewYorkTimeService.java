@@ -33,6 +33,7 @@ public interface NewYorkTimeService {
             @Query("sort") String sort,
             @Query("api-key") String apiKey);
 
+
     // Set a listener to know all about requests
     OkHttpClient okHttpClient = new OkHttpClient.Builder()
             .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))

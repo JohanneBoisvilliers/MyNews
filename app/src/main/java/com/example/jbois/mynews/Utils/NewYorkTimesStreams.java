@@ -5,8 +5,10 @@ import com.example.jbois.mynews.Models.SearchResult;
 
 import java.util.concurrent.TimeUnit;
 
+import butterknife.Optional;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.schedulers.Schedulers;
 
 public class NewYorkTimesStreams {
@@ -29,7 +31,7 @@ public class NewYorkTimesStreams {
                     .timeout(10, TimeUnit.SECONDS);
         }
         //observable to fetch articles in search api
-        public static Observable<SearchResult> streamFetchSearchArticles(String search,String category,String beginDate,String endDate){
+        public static Observable<SearchResult> streamFetchSearchArticles(String search, String category, String beginDate, String endDate){
             NewYorkTimeService newYorkTimeService = NewYorkTimeService.retrofit.create(NewYorkTimeService.class);
             return newYorkTimeService.getSearchArticles(search,category,beginDate,endDate,"newest",apiKey)
                     .subscribeOn(Schedulers.io())
