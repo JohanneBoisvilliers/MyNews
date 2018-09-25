@@ -82,6 +82,7 @@ public class ResultSearchFragment extends BaseFragment {
         this.constructPhraseAccordingToCheckboxes();
     }
     //after picking the dates sent by activity we have to convert them to have a yyyyMMdd format for request
+    //check if user picked a date in previous date pickers before conversion
     private String convertDateToRequest(String dateToConvert){
         String pattern = "dd/MM/yy";
         if(!dateToConvert.equals("Select a date")){
@@ -94,7 +95,6 @@ public class ResultSearchFragment extends BaseFragment {
         }
         return dateToConvert;
     }
-
     //API need a particular format to search in customs category(sports...Arts..)so we format a string for request
     private String constructPhraseAccordingToCheckboxes(){
         for(String str : mCategory){

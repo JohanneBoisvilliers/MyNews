@@ -1,11 +1,18 @@
 package com.example.jbois.mynews.Controllers.Activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import com.example.jbois.mynews.Controllers.Fragments.SearchFragment;
 import com.example.jbois.mynews.R;
+import com.example.jbois.mynews.Utils.AlarmReceiver;
+
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,6 +26,9 @@ public class SearchActivity extends AppCompatActivity {
     private SearchFragment mSearchFragment;
     private String mPageTitle;
     public final static String KEY_TITLE = "TITLE";
+    private AlarmManager mAlarmManager;
+    private PendingIntent mAlarmIntent;
+    private Context mContext=this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,5 +66,18 @@ public class SearchActivity extends AppCompatActivity {
                     .add(R.id.search_fragment_container, mSearchFragment)
                     .commit();
         }
+    }
+
+    private void setAlarm(){
+        mAlarmManager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(mContext, AlarmReceiver.class);
+        mAlarmIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
+
+        // Set the alarm to start at 4:00a.m
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 4);
+
+        mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY, mAlarmIntent);
     }
 }
