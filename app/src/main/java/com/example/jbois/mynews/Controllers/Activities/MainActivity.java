@@ -1,8 +1,12 @@
 package com.example.jbois.mynews.Controllers.Activities;
 
 import android.content.Intent;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -16,12 +20,14 @@ import com.example.jbois.mynews.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.activity_main_viewpager)ViewPager pager;
     @BindView(R.id.activity_main_tabs) TabLayout tabs;
     public final static String KEY_PAGE_TITLE="pageTitle";
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +38,49 @@ public class MainActivity extends AppCompatActivity {
 
         this.configureToolbar();
         this.configureViewPager();
+        this.configureDrawerLayout();
+        this.configureNavigationView();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // 5 - Handle back click to close menu
+        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            this.drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+
+        // 4 - Handle Navigation Item Click
+        int id = item.getItemId();
+
+        switch (id){
+            case R.id.activity_main_drawer_topstories:
+                pager.setCurrentItem(0);
+                break;
+            case R.id.activity_main_drawer_mostpopular:
+                pager.setCurrentItem(1);
+                break;
+            case R.id.activity_main_drawer_technology:
+                pager.setCurrentItem(2);
+                break;
+            case R.id.activity_main_drawer_sciences:
+                pager.setCurrentItem(3);
+                break;
+            case R.id.activity_main_drawer_automobiles:
+                pager.setCurrentItem(4);
+                break;
+            default:
+                break;
+        }
+
+        this.drawerLayout.closeDrawer(GravityCompat.START);
+
+        return true;
     }
 
     @Override
@@ -74,5 +123,18 @@ public class MainActivity extends AppCompatActivity {
         pager.setAdapter(new PageAdapter(getSupportFragmentManager(),getResources().getStringArray(R.array.pageTitleOfViewPager)){});
         //Glue TabLayout and ViewPager together
         tabs.setupWithViewPager(pager);
+    }
+    // 2 - Configure Drawer Layout
+    private void configureDrawerLayout(){
+        this.drawerLayout = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+    }
+
+    // 3 - Configure NavigationView
+    private void configureNavigationView(){
+        this.navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 }

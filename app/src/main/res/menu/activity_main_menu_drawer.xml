@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/activity_main_drawer_news"
+            android:icon="@drawable/sharp_arrow_drop_down_black_18"
+            android:title="Fil d'actualité"/>
+    </group>
+    <item android:title="Catégories d'articles :">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/activity_main_drawer_topstories"
+                    android:title="Top Stories" />
+                <item
+                    android:id="@+id/activity_main_drawer_mostpopular"
+                    android:title="Most Popular" />
+                <item
+                    android:id="@+id/activity_main_drawer_technology"
+                    android:title="Technology" />
+                <item
+                    android:id="@+id/activity_main_drawer_sciences"
+                    android:title="Sciences" />
+                <item
+                    android:id="@+id/activity_main_drawer_automobiles"
+                    android:title="Automobiles" />
+            </group>
+        </menu>
+    </item>
+
+</menu>

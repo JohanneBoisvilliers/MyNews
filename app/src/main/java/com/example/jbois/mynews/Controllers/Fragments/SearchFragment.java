@@ -46,22 +46,14 @@ import static com.example.jbois.mynews.Controllers.Activities.SearchActivity.KEY
  */
 public class SearchFragment extends Fragment {
 
-    @BindView(R.id.notifications_search_option)
-    View mNotificationOption;
-    @BindView(R.id.date_options)
-    View mDateOption;
-    @BindView(R.id.button_search)
-    Button mSearchButton;
-    @BindView(R.id.select_begin_date)
-    EditText mBeginDate;
-    @BindView(R.id.select_end_date)
-    EditText mEndDate;
-    @BindView(R.id.search_term_query)
-    EditText mSearchTerm;
-    @BindViews({R.id.checkbox_arts, R.id.checkbox_business, R.id.checkbox_entrepreneurs, R.id.checkbox_politics, R.id.checkbox_sports, R.id.checkbox_travels})
-    List<CheckBox> mCheckBoxList;
-    @BindView(R.id.switch_enable_notifications)
-    Switch mSwitchNotifications;
+    @BindView(R.id.notifications_search_option) View mNotificationOption;
+    @BindView(R.id.date_options) View mDateOption;
+    @BindView(R.id.button_search) Button mSearchButton;
+    @BindView(R.id.select_begin_date) EditText mBeginDate;
+    @BindView(R.id.select_end_date) EditText mEndDate;
+    @BindView(R.id.search_term_query) EditText mSearchTerm;
+    @BindViews({R.id.checkbox_arts, R.id.checkbox_business, R.id.checkbox_entrepreneurs, R.id.checkbox_politics, R.id.checkbox_sports, R.id.checkbox_travels}) List<CheckBox> mCheckBoxList;
+    @BindView(R.id.switch_enable_notifications) Switch mSwitchNotifications;
 
     private String mPageTitle;
     private DateTime mMyCalendar = new DateTime();
