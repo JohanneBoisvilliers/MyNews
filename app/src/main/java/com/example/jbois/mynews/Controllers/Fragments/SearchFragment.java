@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,8 @@ import com.example.jbois.mynews.R;
 import com.example.jbois.mynews.Utils.AlarmReceiver;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -61,14 +64,17 @@ public class SearchFragment extends Fragment {
     private EditText mEditText;
     private boolean mTestExistingTerms = false;
     private ArrayList<String> mCategory = new ArrayList<>();
+    private boolean mTestCheck;
+    private AlarmManager mAlarmManager;
+    private PendingIntent mAlarmIntent;
+    private DateTime mBeginDateToComparison=new DateTime();
+    private DateTime mEndDateToComparison=new DateTime();
     public static final String QUERY_TERMS = "Query terms";
     public static final String CATEGORY = "Category";
     public static final String BEGIN_DATE = "beginDate";
     public static final String END_DATE = "endDate";
-    private boolean mTestCheck;
-    private AlarmManager mAlarmManager;
-    private PendingIntent mAlarmIntent;
-    private Context mContext = getContext();
+    public static final String PREFS_NAME = "MySharedPreferences";
+
 
     public SearchFragment() {
     }
@@ -86,6 +92,10 @@ public class SearchFragment extends Fragment {
         this.configureDatePicker();
         this.textChangedListener();
         this.listenerOnSearchButton();
+
+        SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+        boolean state = settings.getBoolean("switchkey", false);
+        mSwitchNotifications.setChecked(state);
 
         return view;
     }
@@ -124,6 +134,7 @@ public class SearchFragment extends Fragment {
                 mMyCalendar = mMyCalendar.withMonthOfYear(monthOfYear);
                 mMyCalendar = mMyCalendar.withDayOfMonth(dayOfMonth);
                 updateLabel(mEditText);
+
             }
         };
         this.dateButtonClickListener(mBeginDate);
@@ -173,6 +184,23 @@ public class SearchFragment extends Fragment {
             }
         });
     }
+    //When user select two dates in datePicker, we need to check if this period is a valid period
+    private boolean testIfPeriodIsCorrect(){
+        boolean response = true;
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy");
+        if(!mBeginDate.getText().toString().equals("Select a date")){
+            mBeginDateToComparison = dtf.parseDateTime(mBeginDate.getText().toString());
+        }else if(!mEndDate.getText().toString().equals("Select a date")){
+            mEndDateToComparison = dtf.parseDateTime(mEndDate.getText().toString());
+        }
+        int diff = Days.daysBetween(mBeginDateToComparison.withTimeAtStartOfDay() , mEndDateToComparison.withTimeAtStartOfDay() ).getDays();
+        if(!mBeginDate.getText().toString().equals("Select a date") && !mEndDate.getText().toString().equals("Select a date")) {
+            if (diff <= 0) {
+                response= false;
+            }
+        }
+        return response;
+    }
 
     //Listener to know what to do when user press the search button
     private void listenerOnSearchButton() {
@@ -180,9 +208,13 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (mTestExistingTerms && testCheckBoxes()) {
-                    transferInfosToResultActivity();
-                    Log.e("CATEGORY SIZE", "" + mCategory.size());
-                } else {
+
+                        if(testIfPeriodIsCorrect()){
+                            transferInfosToResultActivity();
+                        }else{
+                            Toast.makeText(getContext(),"Not a valid period !",Toast.LENGTH_SHORT).show();
+                        }
+                    }else {
                     Toast.makeText(getContext(), "Please enter a search query term and check at least one category box", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -238,7 +270,7 @@ public class SearchFragment extends Fragment {
                     calendar.setTimeInMillis(System.currentTimeMillis());
                     calendar.set(Calendar.HOUR_OF_DAY, 4);
 
-                    mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                    mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                             AlarmManager.INTERVAL_DAY, mAlarmIntent);
 
                     Log.e("ALARMTEST","OK");
@@ -247,6 +279,10 @@ public class SearchFragment extends Fragment {
                 } else {
                     Toast.makeText(getContext(), "Notifications disabled", Toast.LENGTH_SHORT).show();
                 }
+                SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putBoolean("switchkey", isChecked);
+                editor.commit();
             }
         });
     }

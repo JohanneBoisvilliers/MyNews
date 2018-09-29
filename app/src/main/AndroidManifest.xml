@@ -39,6 +39,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Controllers.Activities.SearchActivity" />
         </activity>
+
+        <receiver android:name=".Utils.AlarmReceiver"/>
     </application>
 
 </manifest>

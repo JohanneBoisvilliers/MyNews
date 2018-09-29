@@ -5,4 +5,5 @@
     <color name="colorAccent">#a5a5a5</color>
     <color name="colorTextToolbar">#ffffff</color>
     <color name="lineUnderEditText">#35cecb</color>
+    <color name="underlineSelectorToolbar">#00de81</color>
 </resources>

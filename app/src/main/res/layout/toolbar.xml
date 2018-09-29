@@ -9,4 +9,5 @@
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimary"
     app:titleTextColor="@color/colorTextToolbar"
-    app:titleTextAppearance="@style/Toolbar.TitleText"/>
+    app:titleTextAppearance="@style/Toolbar.TitleText"
+    android:theme="@style/ToolBarStyle"/>
