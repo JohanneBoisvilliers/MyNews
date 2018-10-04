@@ -9,13 +9,53 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.example.jbois.mynews.Controllers.Activities.MainActivity;
+import com.example.jbois.mynews.Controllers.Activities.ResultSearchActivity;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.util.ArrayList;
+
+import static com.example.jbois.mynews.Controllers.Activities.ResultSearchActivity.CHECKBOX_CATEGORY;
+import static com.example.jbois.mynews.Controllers.Activities.ResultSearchActivity.GET_BEGIN_DATE;
+import static com.example.jbois.mynews.Controllers.Activities.ResultSearchActivity.GET_END_DATE;
+import static com.example.jbois.mynews.Controllers.Activities.ResultSearchActivity.SEARCH_QUERY_TERMS;
+import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.BEGIN_DATE;
+import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.CATEGORY;
+import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.END_DATE;
+import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.PREFS_NAME;
+import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.QUERY_TERMS;
 
 public class AlarmReceiver extends BroadcastReceiver {
+
+    private String mQueryTerms,mBeginDate;
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.e("ALARMTEST","OK");
+        Log.e("ALARMTEST","alarme reçue");
+
+        Gson gson = new Gson();
+
+        mQueryTerms=context.getSharedPreferences(PREFS_NAME,0).getString("queryToAlarm","");
+        Log.e("ALARMTEST","Mots clés pour la recherche :"+mQueryTerms);
+
+        String categoryFromJson = context.getSharedPreferences(PREFS_NAME,0).getString("categoryToAlarm","");
+        ArrayList<String> category = gson.fromJson(categoryFromJson,new TypeToken<ArrayList<String>>(){}.getType());
+        Log.e("ALARMTEST","catégories :"+category);
         //Intent to invoke app when click on notification.
-        Intent intentToRepeat = new Intent(context, MainActivity.class);
+        Intent intentToRepeat = new Intent(context, ResultSearchActivity.class);
+
+        DateTime jodatime = DateTime.parse(new DateTime().toString());
+        DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd/MM/yy");
+        mBeginDate = dtfOut.print(jodatime);
+
+        intentToRepeat.putExtra(QUERY_TERMS, mQueryTerms);
+        intentToRepeat.putStringArrayListExtra(CATEGORY, category);
+        intentToRepeat.putExtra(BEGIN_DATE,mBeginDate);
+        intentToRepeat.putExtra(END_DATE,"Select a date");
         //set flag to restart/relaunch the app
         intentToRepeat.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

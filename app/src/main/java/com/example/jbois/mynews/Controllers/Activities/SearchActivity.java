@@ -26,9 +26,6 @@ public class SearchActivity extends AppCompatActivity {
     private SearchFragment mSearchFragment;
     private String mPageTitle;
     public final static String KEY_TITLE = "TITLE";
-    private AlarmManager mAlarmManager;
-    private PendingIntent mAlarmIntent;
-    private Context mContext=this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,18 +63,5 @@ public class SearchActivity extends AppCompatActivity {
                     .add(R.id.search_fragment_container, mSearchFragment)
                     .commit();
         }
-    }
-
-    private void setAlarm(){
-        mAlarmManager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(mContext, AlarmReceiver.class);
-        mAlarmIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
-
-        // Set the alarm to start at 4:00a.m
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 4);
-
-        mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY, mAlarmIntent);
     }
 }

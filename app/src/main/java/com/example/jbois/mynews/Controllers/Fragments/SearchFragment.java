@@ -27,6 +27,8 @@ import android.widget.Toast;
 import com.example.jbois.mynews.Controllers.Activities.ResultSearchActivity;
 import com.example.jbois.mynews.R;
 import com.example.jbois.mynews.Utils.AlarmReceiver;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -36,7 +38,9 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -58,17 +62,18 @@ public class SearchFragment extends Fragment {
     @BindViews({R.id.checkbox_arts, R.id.checkbox_business, R.id.checkbox_entrepreneurs, R.id.checkbox_politics, R.id.checkbox_sports, R.id.checkbox_travels}) List<CheckBox> mCheckBoxList;
     @BindView(R.id.switch_enable_notifications) Switch mSwitchNotifications;
 
-    private String mPageTitle;
+    private String mPageTitle,mQueryTermsToSetAlarm,mCategoryToJson;
     private DateTime mMyCalendar = new DateTime();
     private DatePickerDialog.OnDateSetListener mDate;
     private EditText mEditText;
     private boolean mTestExistingTerms = false;
     private ArrayList<String> mCategory = new ArrayList<>();
-    private boolean mTestCheck;
+    private boolean mTestCheck,mState;
     private AlarmManager mAlarmManager;
     private PendingIntent mAlarmIntent;
     private DateTime mBeginDateToComparison=new DateTime();
     private DateTime mEndDateToComparison=new DateTime();
+    private SharedPreferences mMySharedPreferences;
     public static final String QUERY_TERMS = "Query terms";
     public static final String CATEGORY = "Category";
     public static final String BEGIN_DATE = "beginDate";
@@ -79,6 +84,7 @@ public class SearchFragment extends Fragment {
     public SearchFragment() {
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,16 +92,18 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, view);
 
+        mMySharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, 0);
         this.getBundleToSetTitle();
         this.configureActivityContent();
-        this.setAlarm();
         this.configureDatePicker();
         this.textChangedListener();
         this.listenerOnSearchButton();
+        if(mDateOption.getVisibility()==View.INVISIBLE){
+            this.setAlarm();
+        }
 
-        SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
-        boolean state = settings.getBoolean("switchkey", false);
-        mSwitchNotifications.setChecked(state);
+        mState = mMySharedPreferences.getBoolean("switchkey", false);
+        mSwitchNotifications.setChecked(mState);
 
         return view;
     }
@@ -177,6 +185,13 @@ public class SearchFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mTestExistingTerms = true;
+                if(mDateOption.getVisibility()==View.INVISIBLE){
+                    mQueryTermsToSetAlarm=mSearchTerm.getText().toString();
+                    SharedPreferences.Editor editor = mMySharedPreferences.edit();
+                    Log.e("ALARMTEST","les mots clés à save :"+mQueryTermsToSetAlarm);
+                    editor.putString("queryToAlarm",mQueryTermsToSetAlarm);
+                    editor.commit();
+                }
             }
 
             @Override
@@ -238,16 +253,25 @@ public class SearchFragment extends Fragment {
                 mCategory.add(mCheckBoxList.get(i).getText().toString());
             }
             mCheckBoxList.get(i).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                                                @Override
-                                                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                                                    mCategory.clear();
-                                                                    for (int i = 0; i < mCheckBoxList.size(); i++) {
-                                                                        if (mCheckBoxList.get(i).isChecked()) {
-                                                                            mCategory.add(mCheckBoxList.get(i).getText().toString());
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    mCategory.clear();
+                    for (int i = 0; i < mCheckBoxList.size(); i++) {
+                        if (mCheckBoxList.get(i).isChecked()) {
+                            mCategory.add(mCheckBoxList.get(i).getText().toString());
+                            }
+                    }
+                    Log.e("ALARMTEST",mCategory.toString());
+                    if(mDateOption.getVisibility()==View.INVISIBLE){
+                        Gson gson = new Gson();
+                        mCategoryToJson = gson.toJson(mCategory);
+                        SharedPreferences.Editor editor = mMySharedPreferences.edit();
+                        editor.putString("categoryToAlarm",mCategoryToJson);
+                        Log.e("ALARMTEST",mCategoryToJson);
+                        editor.commit();
+                        }
+                }
+            }
             );
             for (int j = 0; j < mCheckBoxList.size(); j++) {
                 if (mCheckBoxList.get(j).isChecked()) {
@@ -259,32 +283,43 @@ public class SearchFragment extends Fragment {
     }
 
     private void setAlarm() {
-        mSwitchNotifications.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    mAlarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-                    Intent intent = new Intent(getContext(), AlarmReceiver.class);//Setting intent to class where Alarm broadcast message will be handled
-                    mAlarmIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
-
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(System.currentTimeMillis());
-                    calendar.set(Calendar.HOUR_OF_DAY, 4);
-
-                    mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                            AlarmManager.INTERVAL_DAY, mAlarmIntent);
-
-                    Log.e("ALARMTEST","OK");
-
-                    Toast.makeText(getContext(), "Notifications enabled", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Notifications disabled", Toast.LENGTH_SHORT).show();
+        this.testCheckBoxes();
+        if (mTestExistingTerms && testCheckBoxes()) {
+            mSwitchNotifications.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        settingsForAlarm();
+                        Toast.makeText(getContext(), "Notifications enabled", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (mAlarmManager != null) {
+                            mAlarmManager.cancel(mAlarmIntent);
+                        }
+                        Toast.makeText(getContext(), "Notifications disabled", Toast.LENGTH_SHORT).show();
+                    }
+                    SharedPreferences.Editor editor = mMySharedPreferences.edit();
+                    editor.putBoolean("switchkey", isChecked);
+                    editor.apply();
                 }
-                SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putBoolean("switchkey", isChecked);
-                editor.commit();
-            }
-        });
+            });
+        }else{
+            mSwitchNotifications.setChecked(false);
+            mSwitchNotifications.setClickable(false);
+            Toast.makeText(getContext(), "Please enter a search query term and check at least one category box", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void settingsForAlarm(){
+        mAlarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getContext(), AlarmReceiver.class);//Setting intent to class where Alarm broadcast message will be handled
+
+        mAlarmIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 4);
+
+        mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, mAlarmIntent);
     }
 }
 
