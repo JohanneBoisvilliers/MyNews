@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        // 5 - Handle back click to close menu
+        // Handle back click to close menu
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             this.drawerLayout.closeDrawer(GravityCompat.START);
         } else {
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
-        // 4 - Handle Navigation Item Click
+        // Handle Navigation Item Click
         int id = item.getItemId();
 
         switch (id){
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //Glue TabLayout and ViewPager together
         tabs.setupWithViewPager(pager);
     }
-    // 2 - Configure Drawer Layout
+    // Configure Drawer Layout
     private void configureDrawerLayout(){
         this.drawerLayout = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
     }
 
-    // 3 - Configure NavigationView
+    // Configure NavigationView
     private void configureNavigationView(){
         this.navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
         navigationView.setNavigationItemSelectedListener(this);

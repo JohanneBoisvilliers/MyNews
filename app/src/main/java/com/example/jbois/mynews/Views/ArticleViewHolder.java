@@ -1,6 +1,7 @@
 package com.example.jbois.mynews.Views;
 
 
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -61,8 +62,10 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder{
             this.SettingConversionDate(pattern,dateToConvert);
         }
     }
+
     //NewYorkTimes API deliver two date format so we check the date format to know how to treat the datas
-    boolean isValidDate(String dateToValidate) {
+    @VisibleForTesting
+    private boolean isValidDate(String dateToValidate) {
         String pattern = "yyyy-MM-dd'T'HH:mm:ssZ";
         try {
             // Set format for input
@@ -74,7 +77,7 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder{
         }
         return true;
     }
-    private void SettingConversionDate(String pattern, String dateToConvert){
+    public void SettingConversionDate(String pattern, String dateToConvert){
         // Set format for input
         DateTimeFormatter dtf = DateTimeFormat.forPattern(pattern);
         // Parsing the date to convert

@@ -28,6 +28,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Optional;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
@@ -48,7 +49,7 @@ public class ResultSearchFragment extends BaseFragment {
     private List<News.Articles> mSearchArticlesList =new ArrayList<>();
     private List<SearchResult.Doc> mTempList =new ArrayList<>();
     private ArrayList<String> mCategory=new ArrayList<>();
-    private String mTermForFQParam =" ";
+    private String mTermForFQParam ="";
 
 
     @Override
@@ -79,11 +80,11 @@ public class ResultSearchFragment extends BaseFragment {
         mCategory.addAll(bundle.getStringArrayList(CHECKBOX_CATEGORY));
         mTempBeginDate=bundle.getString(GET_BEGIN_DATE);
         mTempEndDate=bundle.getString(GET_END_DATE);
-        this.constructPhraseAccordingToCheckboxes();
+        this.constructPhraseAccordingToCheckboxes(mCategory);
     }
     //after picking the dates sent by activity we have to convert them to have a yyyyMMdd format for request
     //check if user picked a date in previous date pickers before conversion
-    private String convertDateToRequest(String dateToConvert){
+    public String convertDateToRequest(String dateToConvert){
         String pattern = "dd/MM/yy";
         if(!dateToConvert.equals("Select a date")){
             DateTimeFormatter dtf =  DateTimeFormat.forPattern(pattern);
@@ -96,14 +97,14 @@ public class ResultSearchFragment extends BaseFragment {
         return dateToConvert;
     }
     //API need a particular format to search in customs category(sports...Arts..)so we format a string for request
-    private String constructPhraseAccordingToCheckboxes(){
-        for(String str : mCategory){
+    public String constructPhraseAccordingToCheckboxes(ArrayList<String> list){
+        for(String str : list){
             mTermForFQParam +="\""+str+"\""+" ";
         }
         return mTermForFQParam;
     }
     //execute the request according to parameters picked by the user
-    protected void executeHttpRequestWithRetrofit(String search, int position, String category, String beginDate, String endDate) {
+    protected void executeHttpRequestWithRetrofit(String search, int position, String category, @Nullable String beginDate, @Nullable String endDate) {
         this.mDisposable = NewYorkTimesStreams.streamFetchSearchArticles(search,category,beginDate,endDate).subscribeWith(new DisposableObserver<SearchResult>() {
             @Override
             public void onNext(SearchResult newslist) {
@@ -139,17 +140,4 @@ public class ResultSearchFragment extends BaseFragment {
             articlesList.get(i).setUrl(docList.get(i).getWebUrl());
         }
     }
-
-    //private int browseMediaList(List<SearchResult.Doc> docList){
-    //    int indexOfThumbnail=0;
-    //    for(int i=0;i<docList.get(0).getMultimedia().size();i++){
-    //                if(docList.get(0).getMultimedia().get(i).getSubtype().equals("thumbnail")){
-    //                    indexOfThumbnail=i;
-    //                    Log.e("INDEX",""+indexOfThumbnail);
-    //                }
-//
-//
-    //    }
-    //    return indexOfThumbnail;
-    //}
 }

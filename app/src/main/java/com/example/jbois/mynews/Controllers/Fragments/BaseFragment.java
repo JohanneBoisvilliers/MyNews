@@ -3,6 +3,7 @@ package com.example.jbois.mynews.Controllers.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -98,7 +99,7 @@ public class BaseFragment extends Fragment{
                 });
     }
     //Method that sort the articles in recyclerView to show the most recent article at the bottom of the list
-    private void sortNewsList(List list){
+    public void sortNewsList(List list){
         Collections.sort(list,new Comparator<News.Articles>() {
             @Override
             public int compare(News.Articles s1, News.Articles s2) {

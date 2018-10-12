@@ -1,5 +1,7 @@
 package com.example.jbois.mynews.Utils;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -62,9 +64,18 @@ public class AlarmReceiver extends BroadcastReceiver {
         //Pending intent to handle launch of Activity in intent above
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 100, intentToRepeat, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        NotificationManager mNotificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("default",
+                    "CHANNEL_ID",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("NOTIFICATION_CHANNEL_ID");
+            mNotificationManager.createNotificationChannel(channel);
+        }
         //Build notification
         NotificationCompat.Builder builder =
-                (NotificationCompat.Builder) new NotificationCompat.Builder(context)
+                (NotificationCompat.Builder) new NotificationCompat.Builder(context,"default")
                         .setContentIntent(pendingIntent)
                         .setSmallIcon(android.R.drawable.arrow_up_float)
                         .setContentTitle("My News : new articles !")

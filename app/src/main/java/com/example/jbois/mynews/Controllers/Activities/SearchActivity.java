@@ -1,19 +1,11 @@
 package com.example.jbois.mynews.Controllers.Activities;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import com.example.jbois.mynews.Controllers.Fragments.SearchFragment;
 import com.example.jbois.mynews.R;
-import com.example.jbois.mynews.Utils.AlarmReceiver;
-
-import java.util.Calendar;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

@@ -39,6 +39,7 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -74,6 +75,7 @@ public class SearchFragment extends Fragment {
     private DateTime mBeginDateToComparison=new DateTime();
     private DateTime mEndDateToComparison=new DateTime();
     private SharedPreferences mMySharedPreferences;
+    private SharedPreferences.Editor mEditor;
     public static final String QUERY_TERMS = "Query terms";
     public static final String CATEGORY = "Category";
     public static final String BEGIN_DATE = "beginDate";
@@ -93,15 +95,28 @@ public class SearchFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         mMySharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, 0);
+        mEditor = mMySharedPreferences.edit();
         this.getBundleToSetTitle();
         this.configureActivityContent();
         this.configureDatePicker();
         this.textChangedListener();
         this.listenerOnSearchButton();
+        this.setAlarm();
         if(mDateOption.getVisibility()==View.INVISIBLE){
-            this.setAlarm();
+            Gson gson=new Gson();
+            mSearchTerm.setText(mMySharedPreferences.getString("queryToAlarm",""));
+            String categoryFromJson = mMySharedPreferences.getString("categoryToAlarm","");
+            ArrayList<String> category = gson.fromJson(categoryFromJson,new TypeToken<ArrayList<String>>(){}.getType());
+            if(category!=null){
+                for (int i = 0; i < category.size(); i++  ) {
+                    for (int j = 0; j < mCheckBoxList.size(); j++) {
+                        if (mCheckBoxList.get(j).getText().toString().equals(category.get(i))) {
+                            mCheckBoxList.get(j).toggle();
+                        }
+                    }
+                }
+            }
         }
-
         mState = mMySharedPreferences.getBoolean("switchkey", false);
         mSwitchNotifications.setChecked(mState);
 
@@ -141,7 +156,7 @@ public class SearchFragment extends Fragment {
                 mMyCalendar = mMyCalendar.withYear(year);
                 mMyCalendar = mMyCalendar.withMonthOfYear(monthOfYear);
                 mMyCalendar = mMyCalendar.withDayOfMonth(dayOfMonth);
-                updateLabel(mEditText);
+                updateLabel(mEditText,mMyCalendar);
 
             }
         };
@@ -151,10 +166,10 @@ public class SearchFragment extends Fragment {
     }
 
     //According to the date picked by the user in the date picker dialog, we update the label of the editText
-    private void updateLabel(EditText editText) {
+    public void updateLabel(EditText editText,DateTime dateTime) {
         String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"; //In which you need put here
         DateTimeFormatter dtf = DateTimeFormat.forPattern(pattern);
-        DateTime jodatime = dtf.parseDateTime(mMyCalendar.toString());
+        DateTime jodatime = dtf.parseDateTime(dateTime.toString());
         DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd/MM/yy");
 
         editText.setText(dtfOut.print(jodatime));
@@ -187,10 +202,9 @@ public class SearchFragment extends Fragment {
                 mTestExistingTerms = true;
                 if(mDateOption.getVisibility()==View.INVISIBLE){
                     mQueryTermsToSetAlarm=mSearchTerm.getText().toString();
-                    SharedPreferences.Editor editor = mMySharedPreferences.edit();
                     Log.e("ALARMTEST","les mots clés à save :"+mQueryTermsToSetAlarm);
-                    editor.putString("queryToAlarm",mQueryTermsToSetAlarm);
-                    editor.commit();
+                    mEditor.putString("queryToAlarm",mQueryTermsToSetAlarm);
+                    mEditor.commit();
                 }
             }
 
@@ -205,10 +219,11 @@ public class SearchFragment extends Fragment {
         DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy");
         if(!mBeginDate.getText().toString().equals("Select a date")){
             mBeginDateToComparison = dtf.parseDateTime(mBeginDate.getText().toString());
-        }else if(!mEndDate.getText().toString().equals("Select a date")){
+        }
+        if(!mEndDate.getText().toString().equals("Select a date")){
             mEndDateToComparison = dtf.parseDateTime(mEndDate.getText().toString());
         }
-        int diff = Days.daysBetween(mBeginDateToComparison.withTimeAtStartOfDay() , mEndDateToComparison.withTimeAtStartOfDay() ).getDays();
+        int diff = (Days.daysBetween(mBeginDateToComparison , mEndDateToComparison)).getDays();
         if(!mBeginDate.getText().toString().equals("Select a date") && !mEndDate.getText().toString().equals("Select a date")) {
             if (diff <= 0) {
                 response= false;
@@ -261,14 +276,11 @@ public class SearchFragment extends Fragment {
                             mCategory.add(mCheckBoxList.get(i).getText().toString());
                             }
                     }
-                    Log.e("ALARMTEST",mCategory.toString());
                     if(mDateOption.getVisibility()==View.INVISIBLE){
                         Gson gson = new Gson();
                         mCategoryToJson = gson.toJson(mCategory);
-                        SharedPreferences.Editor editor = mMySharedPreferences.edit();
-                        editor.putString("categoryToAlarm",mCategoryToJson);
-                        Log.e("ALARMTEST",mCategoryToJson);
-                        editor.commit();
+                        mEditor.putString("categoryToAlarm",mCategoryToJson);
+                        mEditor.commit();
                         }
                 }
             }
@@ -284,30 +296,42 @@ public class SearchFragment extends Fragment {
 
     private void setAlarm() {
         this.testCheckBoxes();
-        if (mTestExistingTerms && testCheckBoxes()) {
-            mSwitchNotifications.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        settingsForAlarm();
-                        Toast.makeText(getContext(), "Notifications enabled", Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (mAlarmManager != null) {
-                            mAlarmManager.cancel(mAlarmIntent);
-                        }
-                        Toast.makeText(getContext(), "Notifications disabled", Toast.LENGTH_SHORT).show();
-                    }
-                    SharedPreferences.Editor editor = mMySharedPreferences.edit();
-                    editor.putBoolean("switchkey", isChecked);
-                    editor.apply();
+        mSwitchNotifications.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if(!checkConditionToSwitch() && isChecked){
+                Toast.makeText(getContext(), "Please enter a search query term and check at least one category box", Toast.LENGTH_SHORT).show();
+                mSwitchNotifications.setChecked(false);
                 }
+                if (checkConditionToSwitch() && isChecked) {
+                settingsForAlarm();
+                Toast.makeText(getContext(), "Notifications enabled", Toast.LENGTH_SHORT).show();
+                }
+                if (!isChecked) {
+                initializeNotifications();
+                mTestExistingTerms=false;
+                Toast.makeText(getContext(), "Notifications disabled", Toast.LENGTH_SHORT).show();
+                }
+                mEditor.putBoolean("switchkey", mSwitchNotifications.isChecked());
+                mEditor.apply();
+            }
             });
-        }else{
-            mSwitchNotifications.setChecked(false);
-            mSwitchNotifications.setClickable(false);
-            Toast.makeText(getContext(), "Please enter a search query term and check at least one category box", Toast.LENGTH_SHORT).show();
-        }
     }
-
+    //desactivate alarm, clear editText, uncheck boxes, clear sharedpreferences
+    private void initializeNotifications(){
+        if (mAlarmManager != null) {
+            mAlarmManager.cancel(mAlarmIntent);
+        }
+        mSearchTerm.getText().clear();
+        for (int i = 0; i < mCheckBoxList.size(); i++) {
+            if (mCheckBoxList.get(i).isChecked()) {
+                mCheckBoxList.get(i).toggle();
+            }
+        }
+        mEditor.putString("categoryToAlarm", "");
+        mEditor.putString("queryToAlarm", "");
+        mEditor.commit();
+    }
+    //method that set the alarm for notifications
     private void settingsForAlarm(){
         mAlarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(getContext(), AlarmReceiver.class);//Setting intent to class where Alarm broadcast message will be handled
@@ -320,6 +344,14 @@ public class SearchFragment extends Fragment {
 
         mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, mAlarmIntent);
+    }
+    //check if there are all conditions needed to have the possibility to toggle the switch
+    public boolean checkConditionToSwitch(){
+        boolean conditionToSwitch = false;
+        if((mTestExistingTerms && testCheckBoxes())||(!mMySharedPreferences.getString("queryToAlarm","").equals("") && !mMySharedPreferences.getString("categoryToAlarm","").equals(""))){
+            conditionToSwitch = true;
+        }
+           return conditionToSwitch;
     }
 }
 
