@@ -94,7 +94,7 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, view);
 
-        mMySharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, 0);
+        mMySharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         mEditor = mMySharedPreferences.edit();
         this.getBundleToSetTitle();
         this.configureActivityContent();

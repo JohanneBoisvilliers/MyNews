@@ -41,10 +41,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Gson gson = new Gson();
 
-        mQueryTerms=context.getSharedPreferences(PREFS_NAME,0).getString("queryToAlarm","");
+        mQueryTerms=context.getSharedPreferences(PREFS_NAME,Context.MODE_PRIVATE).getString("queryToAlarm","");
         Log.e("ALARMTEST","Mots clés pour la recherche :"+mQueryTerms);
 
-        String categoryFromJson = context.getSharedPreferences(PREFS_NAME,0).getString("categoryToAlarm","");
+        String categoryFromJson = context.getSharedPreferences(PREFS_NAME,Context.MODE_PRIVATE).getString("categoryToAlarm","");
         ArrayList<String> category = gson.fromJson(categoryFromJson,new TypeToken<ArrayList<String>>(){}.getType());
         Log.e("ALARMTEST","catégories :"+category);
         //Intent to invoke app when click on notification.

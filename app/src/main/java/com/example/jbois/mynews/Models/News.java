@@ -11,6 +11,8 @@ public class News {
     @SerializedName("response")
     @Expose
     private Response response;
+    @SerializedName("status")
+    private String status;
 
     public Response getResponse() {
         return response;
@@ -18,6 +20,10 @@ public class News {
 
     public List<Articles> getResults() {
         return results;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public class Articles{
