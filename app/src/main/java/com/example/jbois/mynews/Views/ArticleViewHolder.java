@@ -64,8 +64,7 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder{
     }
 
     //NewYorkTimes API deliver two date format so we check the date format to know how to treat the datas
-    @VisibleForTesting
-    private boolean isValidDate(String dateToValidate) {
+    public boolean isValidDate(String dateToValidate) {
         String pattern = "yyyy-MM-dd'T'HH:mm:ssZ";
         try {
             // Set format for input

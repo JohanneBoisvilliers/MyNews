@@ -1,10 +1,18 @@
 package com.example.jbois.mynews;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.bumptech.glide.RequestManager;
+import com.example.jbois.mynews.Controllers.Activities.ResultSearchActivity;
 import com.example.jbois.mynews.Controllers.Adapters.ArticleAdapter;
-import com.example.jbois.mynews.Controllers.Fragments.BaseFragment;
+
+import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.BEGIN_DATE;
+import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.CATEGORY;
+import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.END_DATE;
+import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.QUERY_TERMS;
+import static org.mockito.Mockito.*;
 import com.example.jbois.mynews.Models.News;
 import com.example.jbois.mynews.Models.SearchResult;
 import com.example.jbois.mynews.Utils.NewYorkTimeService;
@@ -48,7 +56,6 @@ public class MyNewsInstrumentedTest {
     public void testSearchArticles(){
         baseForTestRequestSearchResult(mNewYorkTimeService.getSearchArticles(mSearch,mSection,mBeginDate,mEndDate,"newest",apiKey));
     }
-
     @Test
     public void testArticleAdapter(){
         ArticleAdapter articleAdapter = new ArticleAdapter(mList,glide);

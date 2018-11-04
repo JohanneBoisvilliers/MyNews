@@ -1,16 +1,30 @@
 package com.example.jbois.mynews;
 
+import android.content.Context;
+import android.content.Intent;
+import android.view.View;
+
+import com.example.jbois.mynews.Controllers.Activities.ResultSearchActivity;
 import com.example.jbois.mynews.Controllers.Fragments.BaseFragment;
 import com.example.jbois.mynews.Controllers.Fragments.ResultSearchFragment;
 import com.example.jbois.mynews.Models.News;
+import com.example.jbois.mynews.Views.ArticleViewHolder;
 
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.BEGIN_DATE;
+import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.CATEGORY;
+import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.END_DATE;
+import static com.example.jbois.mynews.Controllers.Fragments.SearchFragment.QUERY_TERMS;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class MyNewsUnitTest {
 

@@ -1,5 +1,6 @@
 package com.example.jbois.mynews.Controllers.Activities;
 
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -49,7 +50,7 @@ public class ResultSearchActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     //Picking infos sent by searchFragment to transfer them to resultSearch Fragment to do the request
-    private void getInfosForResearch(){
+    public void getInfosForResearch(){
         mQueryTerms=getIntent().getStringExtra(QUERY_TERMS);
         mCategory=getIntent().getStringArrayListExtra(CATEGORY);
         mGetBeginDate = getIntent().getStringExtra(BEGIN_DATE);

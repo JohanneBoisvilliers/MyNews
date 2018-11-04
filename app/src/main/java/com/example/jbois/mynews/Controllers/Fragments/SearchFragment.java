@@ -154,7 +154,7 @@ public class SearchFragment extends Fragment {
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
                 mMyCalendar = mMyCalendar.withYear(year);
-                mMyCalendar = mMyCalendar.withMonthOfYear(monthOfYear);
+                mMyCalendar = mMyCalendar.withMonthOfYear(monthOfYear+1);
                 mMyCalendar = mMyCalendar.withDayOfMonth(dayOfMonth);
                 updateLabel(mEditText,mMyCalendar);
 
@@ -182,7 +182,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(getContext(), mDate, mMyCalendar
-                        .getYear(), mMyCalendar.getMonthOfYear(),
+                        .getYear(), (mMyCalendar.getMonthOfYear()-1),
                         mMyCalendar.getDayOfMonth()).show();
 
                 mEditText = editText;
@@ -202,7 +202,6 @@ public class SearchFragment extends Fragment {
                 mTestExistingTerms = true;
                 if(mDateOption.getVisibility()==View.INVISIBLE){
                     mQueryTermsToSetAlarm=mSearchTerm.getText().toString();
-                    Log.e("ALARMTEST","les mots clés à save :"+mQueryTermsToSetAlarm);
                     mEditor.putString("queryToAlarm",mQueryTermsToSetAlarm);
                     mEditor.commit();
                 }
